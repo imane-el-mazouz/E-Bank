@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List of meals</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4 mb-4">List of meals</h1>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Carbohydrates (g)</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="repas : ${listRepas}">
+            <td th:text="${repas.description}"></td>
+            <td th:text="${repas.carbohydrates}"></td>
+            <td th:text="${#temporals.format(repas.date, 'dd-MM-yyyy HH:mm')}"></td>
+            <td>
+                <a th:href="@{'/repas/delete/' + ${repas.id}}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('are you sure u want to delete this meal ?')">delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Conseil</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>Add Conseil</h1>
+    <form th:action="@{/conseil/new}" th:object="${conseil}" method="POST">
+        <div class="form-group">
+            <label for="level">Level:</label>
+            <select id="level" name="level" th:field="*{level}" class="form-control">
+                <option value="NORMAL">Normal</option>
+                <option value="HYPOGLYCEMIA">Hypoglycemia</option>
+                <option value="HYPERGLYCEMIA">Hyperglycemia</option>
+                <option value="SEVERE_HYPOGLYCEMIA">Severe Hypoglycemia</option>
+                <option value="MODERATE_HYPOGLYCEMIA">Moderate Hypoglycemia</option>
+                <option value="LOW_NORMAL">Low Normal</option>
+                <option value="HIGH_NORMAL">High Normal</option>
+                <option value="MODERATE_HYPERGLYCEMIA">Moderate Hyperglycemia</option>
+                <option value="SEVERE_HYPERGLYCEMIA">Severe Hyperglycemia</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" th:field="*{message}" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-info">Add Conseil</button>
+    </form>
+    <a th:href="@{/conseil}" class="btn btn-secondary mt-3">Back to list</a>
+</div>
+</body>
+</html>

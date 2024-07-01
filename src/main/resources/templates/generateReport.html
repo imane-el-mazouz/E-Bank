@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Custom Report</title>
+</head>
+<body>
+<h1>Generate Custom Report</h1>
+<form action="/generateReport" method="get">
+    <input type="hidden" name="diabeticId" th:value="${diabeticId}">
+    <button type="submit">Generate Report</button>
+</form>
+</body>
+</html>

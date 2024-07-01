@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Conseils</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container-fluid">
+    <h1>Conseils</h1>
+    <a th:href="@{/conseil/new}" class="btn btn-primary btn-sm mb-3">Add Conseil</a>
+    <table style="width: 80%" border="1" class="table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>Level</th>
+            <th>Message</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="conseil : ${listConseils}">
+            <td th:text="${conseil.level}"></td>
+            <td th:text="${conseil.message}"></td>
+            <td><a th:href="@{'/deleteConseil/' + ${conseil.id}}" class="btn btn-danger btn-sm">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
