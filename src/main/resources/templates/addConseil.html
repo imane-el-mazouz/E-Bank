@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Add Conseil</h1>
-    <form th:action="@{/conseil/new}" th:object="${conseil}" method="POST">
+    <form th:action="@{/account/new}" th:object="${account}" method="POST">
         <div class="form-group">
             <label for="level">Level:</label>
             <select id="level" name="level" th:field="*{level}" class="form-control">
@@ -32,7 +32,7 @@
         </div>
         <button type="submit" class="btn btn-info">Add Conseil</button>
     </form>
-    <a th:href="@{/conseil}" class="btn btn-secondary mt-3">Back to list</a>
+    <a th:href="@{/account}" class="btn btn-secondary mt-3">Back to list</a>
 </div>
 </body>
 </html>
