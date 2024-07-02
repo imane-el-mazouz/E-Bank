@@ -5,6 +5,8 @@ import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,5 +23,12 @@ public class Beneficiary {
     @Column(name = "bank", nullable = false, length = 225)
     private Bank bank;
 
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    @OneToMany(mappedBy = "beneficiary")
+    private List<Transaction> transactions;
 
 }

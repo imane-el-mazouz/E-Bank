@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,5 +35,18 @@ public class Account {
     @Enumerated(EnumType.STRING)
     @Column(name = "bank", nullable = false, length = 225)
     private Bank bank;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "account")
+    private List<Beneficiary> beneficiaries;
+
+    @OneToMany(mappedBy = "account")
+    private List<Card> cards;
+
+
 
 }

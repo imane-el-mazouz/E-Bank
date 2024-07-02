@@ -2,10 +2,18 @@ package com.bank.model;
 
 import com.bank.enums.*;
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+@Entity
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +35,13 @@ public class Card {
     @Enumerated(EnumType.STRING)
     @Column(name = "blockingReason", nullable = false, length = 225)
     private Reason blockingReason;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
 }
