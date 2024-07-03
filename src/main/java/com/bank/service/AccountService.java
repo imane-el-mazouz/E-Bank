@@ -22,4 +22,13 @@ private AccountRepository accountRepository;
         return accountRepository.findById(idA).orElse(null);
     }
 
+    public Account saveAccount(Account account){
+        return accountRepository.save(account);
+    }
+
+
+
+    public void deleteAccount(Long id) {
+        accountRepository.deleteById(id);
+    }
 }
