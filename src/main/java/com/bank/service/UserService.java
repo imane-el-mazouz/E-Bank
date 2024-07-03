@@ -1,5 +1,7 @@
 package com.bank.service;
 
+import com.bank.model.User;
+import com.bank.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,33 +10,25 @@ import java.util.List;
 @Service
 public class UserService {
 
-//    @Autowired
-//    private DiabeticRepository diabeticRepository;
-//    public Diabetic update(Diabetic diabetic) {
-//        return diabeticRepository.save(diabetic);
-//    }
-//
-//    public List<Diabetic> getAll() {
-//        return diabeticRepository.findAll();
-//    }
-//
-//    public Diabetic save(Diabetic diabetic) {
-//        return diabeticRepository.save(diabetic);
-//    }
-//
-//    public Diabetic findDiabetic(String email, String password){return diabeticRepository.findDiabrtic(email, password);}
-//
-//    public Diabetic getById(Long id) {
-//        return diabeticRepository.findById(id).orElseThrow(DiabeticNotFoundException::new);
-//    }
-//
-//    public void delete(Long id) {
-//        diabeticRepository.findById(id).orElseThrow(DiabeticNotFoundException::new);
-//        diabeticRepository.deleteById(id);
-//    }
-//
-//    public Diabetic getDiabeticById(Long id) {
-//        return diabeticRepository.findById(id).orElse(null);
-//    }
+    @Autowired
+   private UserRepository userRepository;
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User saveUser(User user) {
+
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
 
 }

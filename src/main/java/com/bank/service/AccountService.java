@@ -1,37 +1,25 @@
 package com.bank.service;
 
+import com.bank.model.Account;
+import com.bank.model.User;
+import com.bank.repository.AccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AccountService {
 
-//    @Autowired
-//    private DiabeticRepository diabeticRepository;
-//    public Diabetic update(Diabetic diabetic) {
-//        return diabeticRepository.save(diabetic);
-//    }
-//
-//    public List<Diabetic> getAll() {
-//        return diabeticRepository.findAll();
-//    }
-//
-//    public Diabetic save(Diabetic diabetic) {
-//        return diabeticRepository.save(diabetic);
-//    }
-//
-//    public Diabetic findDiabetic(String email, String password){return diabeticRepository.findDiabrtic(email, password);}
-//
-//    public Diabetic getById(Long id) {
-//        return diabeticRepository.findById(id).orElseThrow(DiabeticNotFoundException::new);
-//    }
-//
-//    public void delete(Long id) {
-//        diabeticRepository.findById(id).orElseThrow(DiabeticNotFoundException::new);
-//        diabeticRepository.deleteById(id);
-//    }
-//
-//    public Diabetic getDiabeticById(Long id) {
-//        return diabeticRepository.findById(id).orElse(null);
-//    }
+@Autowired
+private AccountRepository accountRepository;
+
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
+    }
+
+    public Account getAccountById(Long idA) {
+        return accountRepository.findById(idA).orElse(null);
+    }
 
 }
