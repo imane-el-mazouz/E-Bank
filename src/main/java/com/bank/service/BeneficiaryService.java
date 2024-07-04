@@ -1,5 +1,6 @@
 package com.bank.service;
 
+import com.bank.exception.AccountNotFoundException;
 import com.bank.model.Account;
 import com.bank.model.Beneficiary;
 import com.bank.repository.AccountRepository;
@@ -18,17 +19,30 @@ public class BeneficiaryService {
         return beneficiaryRepository.findAll();
     }
 
-public Beneficiary getBeneficiaryById(Long id){
+    public Beneficiary getBeneficiaryById(Long id){
         return beneficiaryRepository.findById(id).orElse(null);
 }
 
 
-public Beneficiary saveBeneficiary(Beneficiary beneficiary){
+    public Beneficiary saveBeneficiary(Beneficiary beneficiary){
         return beneficiaryRepository.save(beneficiary);
 }
 
     public void deleteBeneficiary(Long id) {
         beneficiaryRepository.deleteById(id);
     }
+    public void updateBeneficiary(Long id, Beneficiary updatedBenef) {
+        Beneficiary beneficiary = beneficiaryRepository.findById(id)
+                .orElseThrow(AccountNotFoundException::new);
+
+        beneficiary.setName(updatedBenef.getName());
+        beneficiary.setRib(updatedBenef.getRib());
+        beneficiary.setBank(updatedBenef.getBank());
+        beneficiary.setAccount(updatedBenef.getAccount());
+        beneficiary.setTransactions(updatedBenef.getTransactions());
+        beneficiaryRepository.save(updatedBenef);
+    }
+
+
 
 }
