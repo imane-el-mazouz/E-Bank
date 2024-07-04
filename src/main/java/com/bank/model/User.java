@@ -1,5 +1,6 @@
 package com.bank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -19,12 +20,25 @@ public class User {
     private String name;
     private String profession;
     private String email;
-    private Long password;
+    private String password;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Account> accounts;
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<Card> cards;
 
-    @OneToMany(mappedBy = "user")
-    private List<Card> cards;
+
+    public User(Long idU, String name, String profession, String email, String password) {
+        this.idU = idU;
+        this.name = name;
+        this.profession = profession;
+        this.email = email;
+        this.password = password;
+    }
+
+
+
 
 }

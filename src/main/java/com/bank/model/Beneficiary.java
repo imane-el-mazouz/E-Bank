@@ -1,6 +1,7 @@
 package com.bank.model;
 
 import com.bank.enums.Bank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -29,6 +30,7 @@ public class Beneficiary {
     private Account account;
 
     @OneToMany(mappedBy = "beneficiary")
+    @JsonIgnore
     private List<Transaction> transactions;
 
 }

@@ -1,37 +1,34 @@
 package com.bank.service;
 
+import com.bank.model.Account;
+import com.bank.model.Beneficiary;
+import com.bank.repository.AccountRepository;
+import com.bank.repository.BeneficiaryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class BeneficiaryService {
 
-//    @Autowired
-//    private DiabeticRepository diabeticRepository;
-//    public Diabetic update(Diabetic diabetic) {
-//        return diabeticRepository.save(diabetic);
-//    }
-//
-//    public List<Diabetic> getAll() {
-//        return diabeticRepository.findAll();
-//    }
-//
-//    public Diabetic save(Diabetic diabetic) {
-//        return diabeticRepository.save(diabetic);
-//    }
-//
-//    public Diabetic findDiabetic(String email, String password){return diabeticRepository.findDiabrtic(email, password);}
-//
-//    public Diabetic getById(Long id) {
-//        return diabeticRepository.findById(id).orElseThrow(DiabeticNotFoundException::new);
-//    }
-//
-//    public void delete(Long id) {
-//        diabeticRepository.findById(id).orElseThrow(DiabeticNotFoundException::new);
-//        diabeticRepository.deleteById(id);
-//    }
-//
-//    public Diabetic getDiabeticById(Long id) {
-//        return diabeticRepository.findById(id).orElse(null);
-//    }
+    @Autowired
+    private BeneficiaryRepository beneficiaryRepository;
+    public List<Beneficiary> getAllBeneficiaries(){
+        return beneficiaryRepository.findAll();
+    }
+
+public Beneficiary getBeneficiaryById(Long id){
+        return beneficiaryRepository.findById(id).orElse(null);
+}
+
+
+public Beneficiary saveBeneficiary(Beneficiary beneficiary){
+        return beneficiaryRepository.save(beneficiary);
+}
+
+    public void deleteBeneficiary(Long id) {
+        beneficiaryRepository.deleteById(id);
+    }
 
 }

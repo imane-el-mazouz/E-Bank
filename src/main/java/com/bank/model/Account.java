@@ -1,6 +1,7 @@
 package com.bank.model;
 import com.bank.enums.Bank;
 import com.bank.enums.TypeA;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,21 +31,24 @@ public class Account {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime date;
 
+
+    private Boolean accountClosed = false;
     private String closeureReason ;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "bank", nullable = false, length = 225)
     private Bank bank;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "account")
+    @JsonIgnore
     private List<Beneficiary> beneficiaries;
 
     @OneToMany(mappedBy = "account")
+    @JsonIgnore
     private List<Card> cards;
 
 

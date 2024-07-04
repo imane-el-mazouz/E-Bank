@@ -36,10 +36,10 @@ public class Card {
     @Column(name = "blockingReason", nullable = false, length = 225)
     private Reason blockingReason;
 
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
 
     @ManyToOne
     @JoinColumn(name = "account_id")

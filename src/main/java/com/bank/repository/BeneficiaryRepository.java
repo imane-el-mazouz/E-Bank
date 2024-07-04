@@ -1,9 +1,9 @@
 package com.bank.repository;
 
-import com.bank.model.User;
+import com.bank.model.Beneficiary;
+import com.bank.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BeneficiaryRepository extends JpaRepository<User, Long> {
-//    @Query("SELECT d FROM Diabetic d WHERE d.email = :email and d.password= :password")
-//    Diabetic findDiabrtic(String email, String password);
+public interface BeneficiaryRepository extends JpaRepository<Beneficiary, Long> {
+
 }

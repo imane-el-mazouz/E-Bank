@@ -38,6 +38,7 @@ public class UserController {
 
     @PostMapping
     public User saveUser(@RequestBody User user){
+
         return userService.saveUser(user);
     }
 
@@ -50,4 +51,22 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PutMapping("up/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user2) {
+        User existingUser = userService.getUserById(id);
+        if (existingUser != null) {
+            existingUser.setName(user2.getName());
+            existingUser.setProfession(user2.getProfession());
+            existingUser.setEmail(user2.getEmail());
+            existingUser.setPassword(user2.getPassword());
+            existingUser.setAccounts(user2.getAccounts());
+            User updatedUser = userService.saveUser(existingUser);
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }
+
