@@ -1,42 +1,27 @@
 package com.bank.controller;
 
+import com.bank.model.Transaction;
+import com.bank.service.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/transaction")
 public class TransactionController {
 
-//    @Autowired
-//    private DiabeticService diabeticService;
-//
-//    @RequestMapping(value = "/", method = RequestMethod.GET)
-//    public String printHelloWorld(ModelMap modelMap){
-//        return "Home";
-//    }
-//    @RequestMapping(value = "/contact", method = RequestMethod.GET)
-//    public String printContact(ModelMap modelMap){
-//        return "Contact";
-//    }
-//
-//    @RequestMapping(value = "/home2", method = RequestMethod.GET)
-//    public String printHome(HttpSession session, ModelMap modelMap) {
-//        Diabetic diabetic = (Diabetic) session.getAttribute("diabetic");
-//        if (diabetic == null) {
-//            return "redirect:/";
-//        }
-//        modelMap.addAttribute("diabetic", diabetic);
-//        return "Home2";
-//    }
-//
-//    @RequestMapping(value = "/home2again/{id}", method = RequestMethod.GET)
-//    public String printHomee(@PathVariable Long id, HttpSession session, ModelMap modelMap) {
-//        Diabetic diabetic = diabeticService.getById(id);
-//        if (diabetic == null) {
-//            return "redirect:/";
-//        }
-//        modelMap.addAttribute("diabetic", diabetic);
-//        return "Home2";
-//    }
+@Autowired
+    private TransactionService transactionService;
+    @GetMapping
+    public ResponseEntity<List<Transaction>> getAllTransactions(){
+        List<Transaction> transactions =transactionService.getAllTransactions();
+        return ResponseEntity.ok(transactions);
+    }
+
+
 }

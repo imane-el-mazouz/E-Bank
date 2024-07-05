@@ -1,9 +1,31 @@
 package com.bank.service;
 
+import com.bank.model.Account;
+import com.bank.model.Transaction;
+import com.bank.repository.AccountRepository;
+import com.bank.repository.CardRepository;
+import com.bank.repository.TransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TransactionService {
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private BeneficiaryService beneficiaryService;
+
+
+    public List<Transaction> getAllTransactions() {
+        return transactionRepository.findAll();
+    }
 
 //    @Autowired
 //    private DiabeticRepository diabeticRepository;

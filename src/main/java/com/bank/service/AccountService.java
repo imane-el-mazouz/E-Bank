@@ -40,7 +40,6 @@ public class AccountService {
 //    }
 public Account saveAccount(Account account) {
     Account savedAccount = accountRepository.save(account);
-
     Card card = new Card();
     card.setExpirationDate(LocalDateTime.now().plusYears(2));
     card.setTypeCard(TypeC.debit);
