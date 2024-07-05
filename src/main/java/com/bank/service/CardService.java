@@ -1,9 +1,7 @@
 package com.bank.service;
 
-import com.bank.exception.AccountNotFoundException;
-import com.bank.model.Account;
+import com.bank.exception.CardNotFoundException;
 import com.bank.model.Card;
-import com.bank.repository.AccountRepository;
 import com.bank.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,35 +19,28 @@ public class CardService {
     }
 
     public Card getCardById(Long id) {
-        return cardRepository.findById(id).orElse(null);
+        return cardRepository.findById(id).orElseThrow(CardNotFoundException::new);
     }
 
     public Card saveCard(Card card) {
-
         return cardRepository.save(card);
     }
 
-
-    public void deleteAccount(Long id) {
-        accountRepository.findById(id).orElseThrow(AccountNotFoundException::new);
-        accountRepository.deleteById(id);
+    public void deleteCard(Long id) {
+        cardRepository.findById(id).orElseThrow(CardNotFoundException::new);
+        cardRepository.deleteById(id);
     }
 
-    public void updateAccount(Long id, Account updatedAccount) {
-        Account existingAccount = accountRepository.findById(id)
-                .orElseThrow(AccountNotFoundException::new);
+    public void updateCard(Long id, Card updatedCard) {
+        Card existingCard = cardRepository.findById(id)
+                .orElseThrow(CardNotFoundException::new);
 
-        existingAccount.setTypeA(updatedAccount.getTypeA());
-        existingAccount.setSold(updatedAccount.getSold());
-        existingAccount.setDate(updatedAccount.getDate());
-        existingAccount.setAccountClosed(updatedAccount.getAccountClosed());
-        existingAccount.setCloseureReason(updatedAccount.getCloseureReason());
-        existingAccount.setBank(updatedAccount.getBank());
-        existingAccount.setUser(updatedAccount.getUser());
-        existingAccount.setBeneficiaries(updatedAccount.getBeneficiaries());
-        existingAccount.setCards(updatedAccount.getCards());
+        existingCard.setExpirationDate(updatedCard.getExpirationDate());
+        existingCard.setTypeCard(updatedCard.getTypeCard());
+        existingCard.setStatus(updatedCard.getStatus());
+        existingCard.setBlockingReason(updatedCard.getBlockingReason());
+        existingCard.setAccount(updatedCard.getAccount());
 
-        accountRepository.save(existingAccount);
+        cardRepository.save(existingCard);
     }
-
 }

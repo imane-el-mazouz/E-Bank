@@ -37,7 +37,7 @@ public class AccountController {
 
     @PostMapping
     public Account saveAccount(@RequestBody Account account){
-        return accountService.saveAccount(account);
+            return accountService.saveAccount(account);
     }
 
     @DeleteMapping("/{id}")
@@ -64,15 +64,17 @@ public class AccountController {
 //    public Account updateAccount(@RequestBody Account account) {
 //        return accountService.saveAccount(account);
 //    }
-    @PutMapping("/close/{id}")
-    public ResponseEntity<Void> closeAccount(@PathVariable Long id, @RequestParam String reason) {
-        try {
-            accountService.closeAccount(id, reason);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            return ResponseEntity.badRequest().build();
-        }
+@PutMapping("/close/{id}")
+public ResponseEntity<Void> closeAccount(@PathVariable Long id, @RequestBody String reason) {
+    try {
+        accountService.closeAccount(id, reason);
+        return ResponseEntity.noContent().build();
+    } catch (IllegalArgumentException | IllegalStateException e) {
+        return ResponseEntity.badRequest().build();
     }
+}
+
+
 //    @DeleteMapping("remove/{id}")
 //    public ResponseEntity<?> remove(@PathVariable String id) {
 //        try{

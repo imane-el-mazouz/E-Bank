@@ -47,7 +47,7 @@ public class Account {
     @JsonIgnore
     private List<Beneficiary> beneficiaries;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Card> cards;
 

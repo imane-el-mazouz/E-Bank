@@ -1,42 +1,45 @@
 package com.bank.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.bank.model.Card;
+import com.bank.service.CardService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/cards")
 public class CardController {
+    @Autowired
+    private CardService cardService;
 
-//    @Autowired
-//    private DiabeticService diabeticService;
-//
-//    @RequestMapping(value = "/", method = RequestMethod.GET)
-//    public String printHelloWorld(ModelMap modelMap){
-//        return "Home";
-//    }
-//    @RequestMapping(value = "/contact", method = RequestMethod.GET)
-//    public String printContact(ModelMap modelMap){
-//        return "Contact";
-//    }
-//
-//    @RequestMapping(value = "/home2", method = RequestMethod.GET)
-//    public String printHome(HttpSession session, ModelMap modelMap) {
-//        Diabetic diabetic = (Diabetic) session.getAttribute("diabetic");
-//        if (diabetic == null) {
-//            return "redirect:/";
-//        }
-//        modelMap.addAttribute("diabetic", diabetic);
-//        return "Home2";
-//    }
-//
-//    @RequestMapping(value = "/home2again/{id}", method = RequestMethod.GET)
-//    public String printHomee(@PathVariable Long id, HttpSession session, ModelMap modelMap) {
-//        Diabetic diabetic = diabeticService.getById(id);
-//        if (diabetic == null) {
-//            return "redirect:/";
-//        }
-//        modelMap.addAttribute("diabetic", diabetic);
-//        return "Home2";
-//    }
+    @GetMapping
+    public ResponseEntity<List<Card>> getAllCards() {
+        List<Card> cards = cardService.getAllCards();
+        return ResponseEntity.ok(cards);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Card> getCardById(@PathVariable Long id) {
+        Card card = cardService.getCardById(id);
+        return ResponseEntity.ok(card);
+    }
+
+    @PostMapping
+    public Card saveCard(@RequestBody Card card) {
+        return cardService.saveCard(card);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCard(@PathVariable Long id) {
+        cardService.deleteCard(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateCard(@PathVariable Long id, @RequestBody Card card) {
+        cardService.updateCard(id, card);
+        return ResponseEntity.noContent().build();
+    }
 }

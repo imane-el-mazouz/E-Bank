@@ -34,7 +34,7 @@ public class Card {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "blockingReason", nullable = false, length = 225)
-    private Reason blockingReason;
+    private Reason blockingReason ;
 
 //
 //    @ManyToOne
