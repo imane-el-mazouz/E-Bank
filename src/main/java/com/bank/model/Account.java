@@ -52,5 +52,19 @@ public class Account {
     private List<Card> cards;
 
 
+//    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    private List<Transaction> transactions ;
 
+    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Transaction> outgoingTransactions;
+
+    @OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Transaction> incomingTransactions;
+
+    public List<Transaction> getTransactions() {
+        return getTransactions();
+    }
 }

@@ -29,7 +29,8 @@ public class Beneficiary {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToMany(mappedBy = "beneficiary")
+
+    @OneToMany(mappedBy = "beneficiary", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Transaction> transactions;
 

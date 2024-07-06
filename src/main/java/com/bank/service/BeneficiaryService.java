@@ -1,9 +1,7 @@
 package com.bank.service;
 
 import com.bank.exception.AccountNotFoundException;
-import com.bank.model.Account;
 import com.bank.model.Beneficiary;
-import com.bank.repository.AccountRepository;
 import com.bank.repository.BeneficiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +31,7 @@ public class BeneficiaryService {
     }
     public void updateBeneficiary(Long id, Beneficiary updatedBenef) {
         Beneficiary beneficiary = beneficiaryRepository.findById(id)
-                .orElseThrow(AccountNotFoundException::new);
+                .orElseThrow(() -> new AccountNotFoundException("To Account not found"));
 
         beneficiary.setName(updatedBenef.getName());
         beneficiary.setRib(updatedBenef.getRib());

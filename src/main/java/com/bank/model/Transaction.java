@@ -1,8 +1,5 @@
 package com.bank.model;
 
-import com.bank.enums.Reason;
-import com.bank.enums.Status;
-import com.bank.enums.TypeC;
 import com.bank.enums.TypeTransaction;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,17 +23,32 @@ public class Transaction {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime date;
 
-    private Double amount ;
-    private Long ribT ;
-
+    private Double amount;
+    private Long ribT;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "typeT", nullable = false, length = 225)
     private TypeTransaction typeT;
 
-    private String description ;
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "from_account_id")
+    private Account fromAccount;
+
+    @ManyToOne
+    @JoinColumn(name = "to_account_id")
+    private Account toAccount;
 
     @ManyToOne
     @JoinColumn(name = "beneficiary_id")
     private Beneficiary beneficiary;
+
+    public void setFromAccount(Account fromAccount) {
+        this.fromAccount = fromAccount;
+    }
+
+    public void setToAccount(Account toAccount) {
+        this.toAccount = toAccount;
+    }
 }

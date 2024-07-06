@@ -1,8 +1,11 @@
 package com.bank.controller;
 
+import com.bank.exception.AccountNotFoundException;
 import com.bank.model.Account;
+import com.bank.model.Transaction;
 import com.bank.model.User;
 import com.bank.service.AccountService;
+import com.bank.service.TransactionService;
 import com.bank.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,6 +22,9 @@ public class AccountController {
 
        @Autowired
        private AccountService accountService;
+
+       @Autowired
+        private TransactionService transactionService;
         @GetMapping
         public ResponseEntity<List<Account>> getAllAccounts(){
             List<Account> accounts =accountService.getAllAccounts();
@@ -73,8 +79,17 @@ public ResponseEntity<Void> closeAccount(@PathVariable Long id, @RequestBody Str
         return ResponseEntity.badRequest().build();
     }
 }
+    public Double getAccountSold(Long id) {
+        Account account = accountService.getAccountById(id);
+//                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+        return account.getSold();
+    }
 
-
+    public List<Transaction> getAccountTransactions(Long id) {
+        Account account = accountService.getAccountById(id);
+//                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+        return account.getTransactions();
+    }
 //    @DeleteMapping("remove/{id}")
 //    public ResponseEntity<?> remove(@PathVariable String id) {
 //        try{

@@ -11,11 +11,9 @@ import com.bank.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class AccountService {
@@ -55,13 +53,13 @@ public Account saveAccount(Account account) {
 }
 
     public void deleteAccount(Long id) {
-        accountRepository.findById(id).orElseThrow(AccountNotFoundException::new);
+        accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException("To Account not found"));
         accountRepository.deleteById(id);
     }
 
     public void updateAccount(Long id, Account updatedAccount) {
         Account existingAccount = accountRepository.findById(id)
-                .orElseThrow(AccountNotFoundException::new);
+                .orElseThrow(() -> new AccountNotFoundException("To Account not found"));
 
         existingAccount.setTypeA(updatedAccount.getTypeA());
         existingAccount.setSold(updatedAccount.getSold());
