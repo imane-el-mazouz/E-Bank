@@ -46,6 +46,7 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "to_account_id")
     @JsonProperty("to_account")
+
     private Account toAccount;
 
     @ManyToOne

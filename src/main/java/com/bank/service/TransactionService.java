@@ -3,7 +3,9 @@ package com.bank.service;
 import com.bank.enums.TypeC;
 import com.bank.enums.TypeTransaction;
 import com.bank.exception.AccountNotFoundException;
+import com.bank.exception.BeneficiaryNotFoundException;
 import com.bank.model.Account;
+import com.bank.model.Beneficiary;
 import com.bank.model.Transaction;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.BeneficiaryRepository;
@@ -85,5 +87,43 @@ public class TransactionService {
         return "Money transferred successfully";
     }
 
+    public String transferExternally(Long ribB, Long ribA, Double amount, String description) {
+        Optional<Account> accountOpt = accountRepository.findById(ribA);
+        Optional<Beneficiary> beneficiaryOpt = beneficiaryRepository.findById(ribB);
+
+        Account account = accountOpt.orElseThrow(() -> new AccountNotFoundException("Account not found"));
+        Beneficiary beneficiary = beneficiaryOpt.orElseThrow(() -> new BeneficiaryNotFoundException("Beneficiary not found"));
+
+        if (account.getSold() < amount) {
+            throw new IllegalStateException("Insufficient funds in the source account");
+        }
+
+        account.setSold(account.getSold() - amount);
+        beneficiary.setSold(beneficiary.getSold() + amount);
+
+        accountRepository.save(account);
+        beneficiaryRepository.save(beneficiary);
+
+        Transaction debitTransaction = new Transaction();
+        debitTransaction.setDate(LocalDateTime.now());
+        debitTransaction.setAmount(amount);
+        debitTransaction.setDescription(description);
+        debitTransaction.setFromAccount(account);
+        debitTransaction.setToAccount(null); // Beneficiary is not an account, adjust accordingly
+        debitTransaction.setTypeCard(TypeC.debit);
+        debitTransaction.setTypeT(TypeTransaction.external); // Update type to external
+        transactionRepository.save(debitTransaction);
+
+        Transaction creditTransaction = new Transaction();
+        creditTransaction.setDate(LocalDateTime.now());
+        creditTransaction.setAmount(amount);
+        creditTransaction.setDescription(description);
+        creditTransaction.setFromAccount(null); // Beneficiary is not an account, adjust accordingly
+        creditTransaction.setToAccount(account);
+        creditTransaction.setTypeCard(TypeC.credit);
+        creditTransaction.setTypeT(TypeTransaction.external); // Update type to external
+        transactionRepository.save(creditTransaction);
+        return description;
+    }
 
 }

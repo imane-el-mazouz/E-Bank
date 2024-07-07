@@ -5,6 +5,7 @@ import com.bank.model.*;
 import com.bank.enums.Bank;
 import com.bank.enums.TypeA;
 import com.bank.model.User;
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,4 +75,17 @@ public class AccountTest {
 		assertNull(emptyAccount.getBeneficiaries());
 		assertNull(emptyAccount.getCards());
 	}
+//	@Test
+//	public void testAllArgsConstructor() {
+//		Account emptyAccount = new Account();
+//		assertNull(emptyAccount.getIdA());
+//		assertNull(emptyAccount.getTypeA());
+//		assertNull(emptyAccount.getSold());
+//		assertNull(emptyAccount.getDate());
+//		assertNull(emptyAccount.getCloseureReason());
+//		assertNull(emptyAccount.getBank());
+//		assertNull(emptyAccount.getUser());
+//		assertNull(emptyAccount.getBeneficiaries());
+//		assertNull(emptyAccount.getCards());
+//	}
 }

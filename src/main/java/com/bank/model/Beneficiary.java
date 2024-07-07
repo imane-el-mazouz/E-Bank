@@ -24,6 +24,7 @@ public class Beneficiary {
     @Column(name = "bank", nullable = false, length = 225)
     private Bank bank;
 
+    private Double sold;
 
     @ManyToOne
     @JoinColumn(name = "account_id")

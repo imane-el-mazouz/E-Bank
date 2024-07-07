@@ -29,6 +29,7 @@ public class BeneficiaryService {
     public void deleteBeneficiary(Long id) {
         beneficiaryRepository.deleteById(id);
     }
+
     public void updateBeneficiary(Long id, Beneficiary updatedBenef) {
         Beneficiary beneficiary = beneficiaryRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("To Account not found"));
