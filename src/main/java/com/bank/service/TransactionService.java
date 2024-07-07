@@ -1,5 +1,7 @@
 package com.bank.service;
 
+import com.bank.enums.TypeC;
+import com.bank.enums.TypeTransaction;
 import com.bank.exception.AccountNotFoundException;
 import com.bank.model.Account;
 import com.bank.model.Transaction;
@@ -42,9 +44,11 @@ public class TransactionService {
                 .orElseThrow(() -> new AccountNotFoundException("To Account not found"));
         return account.getTransactions();
     }
+
     public String transferMoney(Long fromAccountId, Long toAccountId, Double amount, String description) {
         Optional<Account> fromAccountOpt = accountRepository.findById(fromAccountId);
         Optional<Account> toAccountOpt = accountRepository.findById(toAccountId);
+
         Account fromAccount = fromAccountOpt.orElseThrow(() -> new AccountNotFoundException("From Account not found"));
         Account toAccount = toAccountOpt.orElseThrow(() -> new AccountNotFoundException("To Account not found"));
 
@@ -58,13 +62,26 @@ public class TransactionService {
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
 
-        Transaction transaction = new Transaction();
-        transaction.setDate(LocalDateTime.now());
-        transaction.setAmount(amount);
-        transaction.setDescription(description);
-        transaction.setFromAccount(fromAccount);
-        transaction.setToAccount(toAccount);
-        transactionRepository.save(transaction);
+        Transaction debitTransaction = new Transaction();
+        debitTransaction.setDate(LocalDateTime.now());
+        debitTransaction.setAmount(amount);
+        debitTransaction.setDescription(description);
+        debitTransaction.setFromAccount(fromAccount);
+        debitTransaction.setToAccount(toAccount);
+        debitTransaction.setTypeCard(TypeC.debit);
+        debitTransaction.setTypeT(TypeTransaction.internal);
+        transactionRepository.save(debitTransaction);
+
+        Transaction creditTransaction = new Transaction();
+        creditTransaction.setDate(LocalDateTime.now());
+        creditTransaction.setAmount(amount);
+        creditTransaction.setDescription(description);
+        creditTransaction.setFromAccount(fromAccount);
+        creditTransaction.setToAccount(toAccount);
+        creditTransaction.setTypeCard(TypeC.credit);
+        creditTransaction.setTypeT(TypeTransaction.internal);
+        transactionRepository.save(creditTransaction);
+
         return "Money transferred successfully";
     }
 

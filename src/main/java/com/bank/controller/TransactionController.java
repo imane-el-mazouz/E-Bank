@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.bank.enums.TypeTransaction.internal;
+
 @RestController
 @RequestMapping("/api/transaction")
 public class TransactionController {
@@ -25,10 +27,13 @@ public class TransactionController {
 //    }
 
     @PostMapping("/transfer")
-    public String transferMoney(@RequestParam Long fromAccountId,
-                                @RequestParam Long toAccountId,
-                                @RequestParam Double amount,
-                                @RequestParam String description) {
-        return transactionService.transferMoney(fromAccountId, toAccountId, amount, description);
+    public String transferMoney(@RequestBody Transaction request) {
+        return transactionService.transferMoney(
+                request.getFromAccount().getIdA(),
+                request.getToAccount().getIdA(),
+                request.getAmount(),
+                request.getDescription()
+
+        );
     }
 }

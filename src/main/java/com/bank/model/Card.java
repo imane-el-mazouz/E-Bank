@@ -27,7 +27,6 @@ public class Card {
     private TypeC typeCard;
 
 
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 225)
     private Status status;
