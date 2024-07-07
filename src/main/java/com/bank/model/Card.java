@@ -43,4 +43,7 @@ public class Card {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
+
+    public Card(String number, String johnDoe, String s) {
+    }
 }

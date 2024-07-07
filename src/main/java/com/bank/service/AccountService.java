@@ -6,6 +6,7 @@ import com.bank.enums.TypeC;
 import com.bank.exception.AccountNotFoundException;
 import com.bank.model.Account;
 import com.bank.model.Card;
+import com.bank.model.Transaction;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,21 +86,31 @@ public Account saveAccount(Account account) {
 //            throw new IllegalArgumentException("Account not found");
 //        }
 //    }
-public void closeAccount(Long id, String reason) {
-    Account account = getAccountById(id);
-    if (account == null) {
-        throw new IllegalArgumentException("Account not found");
+//public void closeAccount(Long id, String reason) {
+//    Account account = getAccountById(id);
+//    if (account == null) {
+//        throw new IllegalArgumentException("Account not found");
+//    }
+//    if (account.getSold() != 0) {
+//        throw new IllegalStateException("Account balance must be zero to close the account");
+//    }
+//    account.setAccountClosed(true);
+//    account.setCloseureReason(reason);
+//    accountRepository.save(account);
+//}
+
+
+
+
+    public void closeAccount(Long id, String reason) {
+        Account account = getAccountById(id);
+        if (account == null) {
+            throw new IllegalArgumentException("Account not found");
+        }
+        account.setAccountClosed(true);
+        account.setCloseureReason(reason);
+        accountRepository.save(account);
     }
-    if (account.getSold() != 0) {
-        throw new IllegalStateException("Account balance must be zero to close the account");
-    }
-    account.setAccountClosed(true);
-    account.setCloseureReason(reason);
-    accountRepository.save(account);
-}
-
-
-
 
     //Creation Date
 //    private java.sql.Date generateDateCreation() {
@@ -114,4 +125,14 @@ public void closeAccount(Long id, String reason) {
 //        }
 //        return AccountNumber.toString();
 //    }
+
+    public Double getAccountBalance(Long id) {
+        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException("Account not found"));
+        return account.getSold();
+    }
+
+    public List<Transaction> getAccountTransactions(Long id) {
+        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException("Account not found"));
+   return account.getTransactions();
+    }
 }

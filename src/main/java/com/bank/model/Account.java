@@ -66,6 +66,8 @@ public class Account {
     @JsonIgnore
     private List<Transaction> incomingTransactions;
 
+
+
 //    public List<Transaction> getTransactions() {
 //        return getTransactions();
 //    }
