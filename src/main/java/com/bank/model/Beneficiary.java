@@ -34,5 +34,5 @@ public class Beneficiary {
     @OneToMany(mappedBy = "beneficiary", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Transaction> transactions;
-
+   
 }

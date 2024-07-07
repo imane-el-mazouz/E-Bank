@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.bank.enums.TypeTransaction.internal;
 
@@ -37,10 +38,21 @@ public class TransactionController {
         );
     }
 
+//    @PostMapping("/extern")
+//    public String transferExternally(@RequestParam Long rib, @RequestParam Long ribA,
+//                                     @RequestParam Double amount, @RequestParam String description) {
+//        return transactionService.transferExternally(rib, ribA, amount, description);
+//    }
+
     @PostMapping("/extern")
-    public String transferExternally(@RequestParam Long rib, @RequestParam Long ribA,
-                                     @RequestParam Double amount, @RequestParam String description) {
-        return transactionService.transferExternally(rib, ribA, amount, description);
+    public ResponseEntity<String> transferExternally(@RequestBody Map<String, Object> request) {
+        Long ribB = Long.parseLong(request.get("ribB").toString());
+        Long ribA = Long.parseLong(request.get("ribA").toString());
+        Double amount = Double.parseDouble(request.get("amount").toString());
+        String description = request.get("description").toString();
+
+        String result = transactionService.transferExternally(ribB, ribA, amount, description);
+        return ResponseEntity.ok(result);
     }
 //    @PostMapping("/extern")
 //    public ResponseEntity<String> transferExternally(@RequestBody Map<String, Object> request) {

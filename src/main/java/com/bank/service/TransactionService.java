@@ -88,11 +88,10 @@ public class TransactionService {
     }
 
     public String transferExternally(Long ribB, Long ribA, Double amount, String description) {
-        Optional<Account> accountOpt = accountRepository.findById(ribA);
-        Optional<Beneficiary> beneficiaryOpt = beneficiaryRepository.findById(ribB);
-
-        Account account = accountOpt.orElseThrow(() -> new AccountNotFoundException("Account not found"));
-        Beneficiary beneficiary = beneficiaryOpt.orElseThrow(() -> new BeneficiaryNotFoundException("Beneficiary not found"));
+        Account account = accountRepository.findByRib(ribA)
+                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+        Beneficiary beneficiary = beneficiaryRepository.findByRib(ribB)
+                .orElseThrow(() -> new BeneficiaryNotFoundException("Beneficiary not found"));
 
         if (account.getSold() < amount) {
             throw new IllegalStateException("Insufficient funds in the source account");
@@ -109,21 +108,22 @@ public class TransactionService {
         debitTransaction.setAmount(amount);
         debitTransaction.setDescription(description);
         debitTransaction.setFromAccount(account);
-        debitTransaction.setToAccount(null); // Beneficiary is not an account, adjust accordingly
+        debitTransaction.setBeneficiary(beneficiary);
         debitTransaction.setTypeCard(TypeC.debit);
-        debitTransaction.setTypeT(TypeTransaction.external); // Update type to external
+        debitTransaction.setTypeT(TypeTransaction.external);
         transactionRepository.save(debitTransaction);
 
         Transaction creditTransaction = new Transaction();
         creditTransaction.setDate(LocalDateTime.now());
         creditTransaction.setAmount(amount);
         creditTransaction.setDescription(description);
-        creditTransaction.setFromAccount(null); // Beneficiary is not an account, adjust accordingly
-        creditTransaction.setToAccount(account);
+        creditTransaction.setBeneficiary(beneficiary);
         creditTransaction.setTypeCard(TypeC.credit);
-        creditTransaction.setTypeT(TypeTransaction.external); // Update type to external
+        creditTransaction.setTypeT(TypeTransaction.external);
         transactionRepository.save(creditTransaction);
-        return description;
-    }
 
+        return "External transfer to beneficiary completed successfully";
+    }
 }
+
+

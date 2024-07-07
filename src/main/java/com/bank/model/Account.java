@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,6 +28,7 @@ public class Account {
     private TypeA typeA;
 
     private Double sold;
+    private Long rib;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime date;
@@ -64,7 +66,14 @@ public class Account {
     @JsonIgnore
     private List<Transaction> incomingTransactions;
 
+//    public List<Transaction> getTransactions() {
+//        return getTransactions();
+//    }
+
     public List<Transaction> getTransactions() {
-        return getTransactions();
+        List<Transaction> allTransactions = new ArrayList<>();
+        allTransactions.addAll(outgoingTransactions);
+        allTransactions.addAll(incomingTransactions);
+        return allTransactions;
     }
 }
