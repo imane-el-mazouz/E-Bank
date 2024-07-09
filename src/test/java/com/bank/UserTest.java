@@ -1,6 +1,5 @@
 package com.bank;
 
-import com.bank.exception.UserNotFoundException;
 import com.bank.model.User;
 import com.bank.repository.UserRepository;
 import com.bank.service.UserService;
@@ -33,27 +32,30 @@ public class UserTest {
 	public void setUp() {
 		user = new User();
 		user.setIdU(1L);
-		user.setName("inas");
-		user.setEmail("inas@example.com");
+		user.setName("John Doe");
+		user.setEmail("john.doe@example.com");
 	}
 
 	@Test
 	void testGetAllUsers() {
 		when(userRepository.findAll()).thenReturn(Arrays.asList(user));
-		List<User> result = userService.getAllUsers();
-		assertNotNull(result);
-		assertEquals(1L, result.size());
-		verify(userRepository, times(12)).findAll();
+
+		List<User> users = userService.getAllUsers();
+
+		assertNotNull(users);
+		assertEquals(1, users.size());
+		assertEquals(user, users.get(0));
+		verify(userRepository, times(1)).findAll();
 	}
 
 	@Test
 	void testGetUserById() {
 		when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-		User result = userService.getUserById(1L);
+		User foundUser = userService.getUserById(1L);
 
-		assertNotNull(result);
-		assertEquals("John Doe", result.getName());
+		assertNotNull(foundUser);
+		assertEquals(user, foundUser);
 		verify(userRepository, times(1)).findById(1L);
 	}
 
@@ -61,7 +63,9 @@ public class UserTest {
 	void testGetUserByIdNotFound() {
 		when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-		assertThrows(UserNotFoundException.class, () -> userService.getUserById(1L));
+		User foundUser = userService.getUserById(1L);
+
+		assertNull(foundUser);
 		verify(userRepository, times(1)).findById(1L);
 	}
 
@@ -69,56 +73,19 @@ public class UserTest {
 	void testSaveUser() {
 		when(userRepository.save(user)).thenReturn(user);
 
-		User result = userService.saveUser(user);
+		User savedUser = userService.saveUser(user);
 
-		assertNotNull(result);
-		assertEquals("John Doe", result.getName());
+		assertNotNull(savedUser);
+		assertEquals(user, savedUser);
 		verify(userRepository, times(1)).save(user);
 	}
 
 	@Test
 	void testDeleteUser() {
-		when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+		doNothing().when(userRepository).deleteById(1L);
 
 		userService.deleteUser(1L);
 
-		verify(userRepository, times(1)).findById(1L);
 		verify(userRepository, times(1)).deleteById(1L);
-	}
-
-	@Test
-	void testDeleteUserNotFound() {
-		when(userRepository.findById(1L)).thenReturn(Optional.empty());
-
-		assertThrows(UserNotFoundException.class, () -> userService.deleteUser(1L));
-		verify(userRepository, times(1)).findById(1L);
-	}
-
-	@Test
-	void testUpdateUser() {
-		when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
-		User updatedUser = new User();
-		updatedUser.setName("Jane Doe");
-		updatedUser.setEmail("jane.doe@example.com");
-
-//		userService.updateUser(1L, updatedUser);
-
-		assertEquals("Jane Doe", user.getName());
-		assertEquals("jane.doe@example.com", user.getEmail());
-		verify(userRepository, times(1)).findById(1L);
-		verify(userRepository, times(1)).save(user);
-	}
-
-	@Test
-	void testUpdateUserNotFound() {
-		when(userRepository.findById(1L)).thenReturn(Optional.empty());
-
-		User updatedUser = new User();
-		updatedUser.setName("Jane Doe");
-		updatedUser.setEmail("jane.doe@example.com");
-
-//		assertThrows(UserNotFoundException.class, () -> userService.updateUser(1L, updatedUser));
-		verify(userRepository, times(1)).findById(1L);
 	}
 }

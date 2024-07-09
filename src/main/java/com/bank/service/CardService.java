@@ -31,7 +31,7 @@ public class CardService {
         cardRepository.deleteById(id);
     }
 
-    public void updateCard(Long id, Card updatedCard) {
+    public Card updateCard(Long id, Card updatedCard) {
         Card existingCard = cardRepository.findById(id)
                 .orElseThrow(CardNotFoundException::new);
 
@@ -42,5 +42,6 @@ public class CardService {
         existingCard.setAccount(updatedCard.getAccount());
 
         cardRepository.save(existingCard);
+        return existingCard;
     }
 }

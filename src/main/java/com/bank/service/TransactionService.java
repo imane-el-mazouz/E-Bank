@@ -4,6 +4,7 @@ import com.bank.enums.TypeC;
 import com.bank.enums.TypeTransaction;
 import com.bank.exception.AccountNotFoundException;
 import com.bank.exception.BeneficiaryNotFoundException;
+import com.bank.exception.TransactionNotFoundException;
 import com.bank.model.Account;
 import com.bank.model.Beneficiary;
 import com.bank.model.Transaction;
@@ -46,7 +47,6 @@ public class TransactionService {
                 .orElseThrow(() -> new AccountNotFoundException("To Account not found"));
         return account.getTransactions();
     }
-
     public String transferMoney(Long fromAccountId, Long toAccountId, Double amount, String description) {
         Optional<Account> fromAccountOpt = accountRepository.findById(fromAccountId);
         Optional<Account> toAccountOpt = accountRepository.findById(toAccountId);

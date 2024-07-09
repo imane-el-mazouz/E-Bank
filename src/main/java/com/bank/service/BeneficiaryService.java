@@ -30,7 +30,7 @@ public class BeneficiaryService {
         beneficiaryRepository.deleteById(id);
     }
 
-    public void updateBeneficiary(Long id, Beneficiary updatedBenef) {
+    public Beneficiary updateBeneficiary(Long id, Beneficiary updatedBenef) {
         Beneficiary beneficiary = beneficiaryRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("To Account not found"));
 
@@ -40,6 +40,7 @@ public class BeneficiaryService {
         beneficiary.setAccount(updatedBenef.getAccount());
         beneficiary.setTransactions(updatedBenef.getTransactions());
         beneficiaryRepository.save(updatedBenef);
+        return beneficiary;
     }
 
 

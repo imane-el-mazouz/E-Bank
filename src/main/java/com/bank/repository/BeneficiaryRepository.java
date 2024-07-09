@@ -11,6 +11,5 @@ public interface BeneficiaryRepository extends JpaRepository<Beneficiary, Long> 
     @Query("UPDATE Beneficiary b SET b.sold = :sold WHERE b.idB = :idB")
     void updateBeneficiarySold(Long idB, Double sold);
 
-
     Optional<Beneficiary> findByRib(Long rib);
 }

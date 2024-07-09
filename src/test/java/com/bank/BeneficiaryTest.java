@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,17 +38,15 @@ public class BeneficiaryTest {
 		beneficiary.setName("John Doe");
 		beneficiary.setRib(Long.valueOf("1234567890"));
 		beneficiary.setBank(Bank.valueOf("cih"));
-		beneficiary.setAccount(null); // Assuming Account is a separate entity
-		beneficiary.setTransactions(null); // Assuming Transactions is a separate entity
+		beneficiary.setAccount(null);
+		beneficiary.setTransactions(null);
 	}
 
 	@Test
 	void testGetAllBeneficiaries() {
-		List<Beneficiary> beneficiaries = Arrays.asList(beneficiary);
+		List<Beneficiary> beneficiaries = Collections.singletonList(beneficiary);
 		when(beneficiaryRepository.findAll()).thenReturn(beneficiaries);
-
 		List<Beneficiary> result = beneficiaryService.getAllBeneficiaries();
-
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		verify(beneficiaryRepository, times(1)).findAll();
@@ -56,9 +55,7 @@ public class BeneficiaryTest {
 	@Test
 	void testGetBeneficiaryById() {
 		when(beneficiaryRepository.findById(1L)).thenReturn(Optional.of(beneficiary));
-
 		Beneficiary result = beneficiaryService.getBeneficiaryById(1L);
-
 		assertNotNull(result);
 		assertEquals("John Doe", result.getName());
 		verify(beneficiaryRepository, times(1)).findById(1L);
@@ -67,9 +64,7 @@ public class BeneficiaryTest {
 	@Test
 	void testGetBeneficiaryByIdNotFound() {
 		when(beneficiaryRepository.findById(1L)).thenReturn(Optional.empty());
-
 		Beneficiary result = beneficiaryService.getBeneficiaryById(1L);
-
 		assertNull(result);
 		verify(beneficiaryRepository, times(1)).findById(1L);
 	}
@@ -77,9 +72,7 @@ public class BeneficiaryTest {
 	@Test
 	void testSaveBeneficiary() {
 		when(beneficiaryRepository.save(beneficiary)).thenReturn(beneficiary);
-
 		Beneficiary result = beneficiaryService.saveBeneficiary(beneficiary);
-
 		assertNotNull(result);
 		assertEquals("John Doe", result.getName());
 		verify(beneficiaryRepository, times(1)).save(beneficiary);
@@ -88,7 +81,6 @@ public class BeneficiaryTest {
 	@Test
 	void testDeleteBeneficiary() {
 		beneficiaryService.deleteBeneficiary(1L);
-
 		verify(beneficiaryRepository, times(1)).deleteById(1L);
 	}
 
@@ -102,24 +94,25 @@ public class BeneficiaryTest {
 		updatedBeneficiary.setTransactions(null);
 
 		when(beneficiaryRepository.findById(1L)).thenReturn(Optional.of(beneficiary));
-		when(beneficiaryRepository.save(beneficiary)).thenReturn(beneficiary);
+		when(beneficiaryRepository.save(any(Beneficiary.class))).thenReturn(updatedBeneficiary);
 
-		beneficiaryService.updateBeneficiary(1L, updatedBeneficiary);
+		Beneficiary result = beneficiaryService.updateBeneficiary(1L, updatedBeneficiary);
 
 		verify(beneficiaryRepository, times(1)).findById(1L);
-		verify(beneficiaryRepository, times(1)).save(beneficiary);
+		verify(beneficiaryRepository, times(1)).save(any(Beneficiary.class));
 
-		assertEquals("Jane Doe", beneficiary.getName());
-		assertEquals("0987654321", beneficiary.getRib());
-		assertEquals("Updated Bank", beneficiary.getBank());
-		assertNull(beneficiary.getAccount());
-		assertNull(beneficiary.getTransactions());
+		assertNotNull(result);
+		assertEquals("Jane Doe", result.getName());
+		assertEquals(Long.valueOf("0987654321"), result.getRib());
+		assertEquals(Bank.valueOf("cih"), result.getBank());
+		assertNull(result.getAccount());
+		assertNull(result.getTransactions());
 	}
+
 
 	@Test
 	void testUpdateBeneficiaryNotFound() {
 		when(beneficiaryRepository.findById(1L)).thenReturn(Optional.empty());
-
 		Beneficiary updatedBeneficiary = new Beneficiary();
 		updatedBeneficiary.setName("Jane Doe");
 		updatedBeneficiary.setRib(Long.valueOf("0987654321"));

@@ -55,6 +55,7 @@ public Account saveAccount(Account account) {
 
     public void deleteAccount(Long id) {
         accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException("To Account not found"));
+        cardRepository.deleteCardByAccountIdA(id);
         accountRepository.deleteById(id);
     }
 
@@ -107,24 +108,12 @@ public Account saveAccount(Account account) {
         if (account == null) {
             throw new IllegalArgumentException("Account not found");
         }
+
         account.setAccountClosed(true);
         account.setCloseureReason(reason);
         accountRepository.save(account);
     }
 
-    //Creation Date
-//    private java.sql.Date generateDateCreation() {
-//        return new Date(System.currentTimeMillis() + (5L * 365 * 24 * 60 * 60 * 1000));
-//    }
-//
-//    private String generateAccountNumber() {
-//        Random random = new Random();
-//        StringBuilder AccountNumber = new StringBuilder();
-//        for (int i = 0; i < 10; i++) {
-//            AccountNumber.append(random.nextInt(10));
-//        }
-//        return AccountNumber.toString();
-//    }
 
     public Double getAccountBalance(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException("Account not found"));

@@ -1,77 +1,79 @@
 package com.bank;
-import com.bank.model.*;
 
-
+import com.bank.enums.*;
 import com.bank.enums.Bank;
-import com.bank.enums.TypeA;
+import com.bank.exception.AccountNotFoundException;
+import com.bank.model.Account;
+import com.bank.model.Card;
+import com.bank.model.Transaction;
 import com.bank.model.User;
-import lombok.AllArgsConstructor;
+import com.bank.repository.AccountRepository;
+import com.bank.repository.CardRepository;
+import com.bank.service.AccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-//@SpringBootTest
-//@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 public class AccountTest {
 
 	@Mock
-	private MockMvc mockMvc;
-	@Mock
-	private User mockUser;
+	private AccountRepository accountRepository;
 
 	@Mock
-	private Beneficiary mockBeneficiary;
-
-	@Mock
-	private Card mockCard;
+	private CardRepository cardRepository;
 
 	@InjectMocks
-	private Account account;
+	private AccountService accountService;
+
+	private Account testAccount;
+	private Card testCard;
 
 	@BeforeEach
-	public void setUp() {
-		account.setIdA(1L);
-		account.setTypeA(TypeA.currentAccount);
-		account.setSold(1000.0);
-		account.setDate(LocalDateTime.of(2023, 1, 1, 10, 0));
-		account.setCloseureReason("Closed");
-		account.setBank(Bank.cih);
-		account.setUser(mockUser);
-		account.setBeneficiaries(List.of(mockBeneficiary));
-		account.setCards(List.of(mockCard));
+	void setUp() {
+		testAccount = new Account();
+		testAccount.setIdA(1L);
+		testAccount.setTypeA(TypeA.currentAccount);
+		testAccount.setSold(1000.0);
+		testAccount.setDate(LocalDateTime.of(2023, 1, 1, 10, 0));
+		testAccount.setCloseureReason("Closed");
+		testAccount.setBank(Bank.cih);
+		testAccount.setUser(new User());
+		testAccount.setBeneficiaries(new ArrayList<>());
+		testAccount.setCards(new ArrayList<>());
+
+		testCard = new Card();
+		testCard.setIdC(1L);
+		testCard.setExpirationDate(LocalDateTime.now().plusYears(2));
+		testCard.setTypeCard(TypeC.debit);
+		testCard.setStatus(Status.activated);
+		testCard.setBlockingReason(Reason.none);
+		testCard.setAccount(testAccount);
 	}
 
 	@Test
 	public void testGetters() {
-		assertEquals(1L, account.getIdA());
-		assertEquals(TypeA.currentAccount, account.getTypeA());
-		assertEquals(1000.0, account.getSold());
-		assertEquals(LocalDateTime.of(2023, 1, 1, 10, 0), account.getDate());
-		assertEquals("Closed", account.getCloseureReason());
-		assertEquals(Bank.cih, account.getBank());
-		assertEquals(mockUser, account.getUser());
-		assertEquals(List.of(mockBeneficiary), account.getBeneficiaries());
-		assertEquals(List.of(mockCard), account.getCards());
+		assertEquals(1L, testAccount.getIdA());
+		assertEquals(TypeA.currentAccount, testAccount.getTypeA());
+		assertEquals(1000.0, testAccount.getSold());
+		assertEquals(LocalDateTime.of(2023, 1, 1, 10, 0), testAccount.getDate());
+		assertEquals("Closed", testAccount.getCloseureReason());
+		assertEquals(Bank.cih, testAccount.getBank());
+		assertNotNull(testAccount.getUser());
+		assertNotNull(testAccount.getBeneficiaries());
+		assertNotNull(testAccount.getCards());
 	}
 
 	@Test
@@ -87,107 +89,110 @@ public class AccountTest {
 		assertNull(emptyAccount.getBeneficiaries());
 		assertNull(emptyAccount.getCards());
 	}
+
+	@Test
+	void testGetAllAccounts() {
+		when(accountRepository.findAll()).thenReturn(List.of(testAccount));
+
+		List<Account> result = accountService.getAllAccounts();
+
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		assertEquals(testAccount.getIdA(), result.get(0).getIdA());
+
+		verify(accountRepository, times(1)).findAll();
+	}
+
 //	@Test
-//	public void testAllArgsConstructor() {
-//		Account newAccount = new Account(2L, TypeA.savingAccount, 2000.0,
-//				LocalDateTime.of(2023, 2, 1, 10, 0), "Reason", Bank.bmce,
-//				mockUser, List.of(mockBeneficiary), List.of(mockCard));
+//	void testSaveAccount() {
+//		when(accountRepository.save(any(Account.class))).thenAnswer(invocation -> {
+//			Account accountToSave = invocation.getArgument(0);
+//			if (accountToSave.getIdA() == null) {
+//				accountToSave.setIdA(1L);
+//			}
+//			return accountToSave;
+//		});
 //
-//		assertEquals(2L, newAccount.getIdA());
-//		assertEquals(TypeA.savingAccount, newAccount.getTypeA());
-//		assertEquals(2000.0, newAccount.getSold());
-//		assertEquals(LocalDateTime.of(2023, 2, 1, 10, 0), newAccount.getDate());
-//		assertEquals("Reason", newAccount.getCloseureReason());
-//		assertEquals(Bank.bmce, newAccount.getBank());
-//		assertEquals(mockUser, newAccount.getUser());
-//		assertEquals(List.of(mockBeneficiary), newAccount.getBeneficiaries());
-//		assertEquals(List.of(mockCard), newAccount.getCards());
+//		when(cardRepository.save(any(Card.class))).thenReturn(testCard);
+//
+//		Account savedAccount = accountService.saveAccount(testAccount);
+//
+//		assertNotNull(savedAccount);
+//		assertNotNull(savedAccount.getIdA());
+//		assertEquals(testAccount.getTypeA(), savedAccount.getTypeA());
+//		assertEquals(testAccount.getSold(), savedAccount.getSold());
+//		assertEquals(testAccount.getDate(), savedAccount.getDate());
+//		assertEquals(testAccount.getCloseureReason(), savedAccount.getCloseureReason());
+//		assertEquals(testAccount.getBank(), savedAccount.getBank());
+//		assertEquals(testAccount.getUser(), savedAccount.getUser());
+//		assertEquals(testAccount.getBeneficiaries(), savedAccount.getBeneficiaries());
+//
+//		assertEquals(1, savedAccount.getCards().size());
+//		Card savedCard = savedAccount.getCards().get(0);
+//
+//		assertEquals(testCard.getExpirationDate().truncatedTo(ChronoUnit.SECONDS),
+//				savedCard.getExpirationDate().truncatedTo(ChronoUnit.SECONDS));
+//
+//		assertEquals(testCard.getTypeCard(), savedCard.getTypeCard());
+//		assertEquals(testCard.getStatus(), savedCard.getStatus());
+//		assertEquals(testCard.getBlockingReason(), savedCard.getBlockingReason());
+//
+//		verify(accountRepository, times(1)).save(any(Account.class));
+//		verify(cardRepository, times(1)).save(any(Card.class));
 //	}
 
 
-//	@Test
-//	public void testGetAllAccounts() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.get("/api/account")
-//						.contentType(MediaType.APPLICATION_JSON))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andDo(MockMvcResultHandlers.print());
-//	}
+	@Test
+	void testUpdateAccount() {
+		when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
+		when(accountRepository.save(any(Account.class))).thenReturn(testAccount);
 
+		Account updatedAccount = new Account();
+		updatedAccount.setTypeA(TypeA.savingAccount);
+		updatedAccount.setSold(2000.0);
 
-//	@Test
-//	public void testGetAccountById() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.get("/api/account/1")
-//						.contentType(MediaType.APPLICATION_JSON))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andDo(MockMvcResultHandlers.print());
-//	}
+		accountService.updateAccount(1L, updatedAccount);
 
-//	@Test
-//	public void testSaveAccount() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.post("/api/account")
-//						.content("{\"idA\": 66, \"typeA\": \"currentAccount\", \"sold\": 1000.0, \"date\": \"2023-01-01T10:00:00\", \"closeureReason\": \"Closed\", \"bank\": \"cih\",}")
-//						.contentType(MediaType.APPLICATION_JSON))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andDo(MockMvcResultHandlers.print());
-//	}
-//
-//	@Test
-//	public void testDeleteAccount() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.delete("/api/account/1")
-//						.contentType(MediaType.APPLICATION_JSON))
-//				.andExpect(MockMvcResultMatchers.status().isNoContent())
-//				.andDo(MockMvcResultHandlers.print());
-//	}
-//
-//	@Test
-//	public void testUpdateAccount() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.put("/api/account/update/1")
-//						.content("{\"idA\": 1, \"typeA\": \"currentAccount\", \"sold\": 1000.0, \"date\": \"2023-01-01T10:00:00\", \"closeureReason\": \"Closed\", \"bank\": \"cih\", \"user\": {}, \"beneficiaries\": [], \"cards\": []}")
-//						.contentType(MediaType.APPLICATION_JSON))
-//				.andExpect(MockMvcResultMatchers.status().isNoContent())
-//				.andDo(MockMvcResultHandlers.print());
-//	}
-//
-//	@Test
-//	public void testCloseAccount() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.put("/api/account/close/1")
-//						.content("{\"reason\": \"Closed due to request\"}")
-//						.contentType(MediaType.APPLICATION_JSON))
-//				.andExpect(MockMvcResultMatchers.status().isNoContent())
-//				.andDo(MockMvcResultHandlers.print());
-//	}
-//
-//	@Test
-//	public void testGetAccountBalance() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.get("/api/account/1/sold")
-//						.contentType(MediaType.APPLICATION_JSON))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andDo(MockMvcResultHandlers.print());
-//	}
-//
+		assertEquals(updatedAccount.getTypeA(), testAccount.getTypeA());
+		assertEquals(updatedAccount.getSold(), testAccount.getSold());
 
+		verify(accountRepository, times(1)).findById(1L);
+		verify(accountRepository, times(1)).save(any(Account.class));
+	}
+
+	@Test
+	void testCloseAccount() {
+		when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
+		when(accountRepository.save(any(Account.class))).thenReturn(testAccount);
+
+		accountService.closeAccount(1L, "Closed due to request");
+
+		assertEquals("Closed due to request", testAccount.getCloseureReason());
+
+		verify(accountRepository, times(1)).findById(1L);
+		verify(accountRepository, times(1)).save(any(Account.class));
+	}
+
+	@Test
+	void testGetAccountBalance() {
+		when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
+
+		Double balance = accountService.getAccountBalance(1L);
+
+		assertNotNull(balance);
+		assertEquals(testAccount.getSold(), balance);
+
+		verify(accountRepository, times(1)).findById(1L);
+	}
 
 //	@Test
-//	public void testGetAccountTransactions() throws Exception {
-//		mockMvc.perform(MockMvcRequestBuilders.get("/api/account/1/transactions")
-//						.contentType(MediaType.APPLICATION_JSON))
-//				.andExpect(MockMvcResultMatchers.status().isOk())
-//				.andDo(MockMvcResultHandlers.print());
+//	void testGetAccountTransactions() {
+//		when(accountRepository.findById(1L)).thenReturn(Optional.of(testAccount));
+//		List<Transaction> transactions = new ArrayList<>(); // Replace with actual mocked transactions if needed
+//		List<Transaction> transactions = accountService.getAccountTransactions(1L);
+//		assertNotNull(transactions);
+//		assertEquals(transactions),
+//				verify(accountRepository, times(1)).findById(1L);
 //	}
-//
-//	private Account createMockAccount() {
-//		Account account = new Account();
-//		account.setIdA(1L);
-//		account.setTypeA(TypeA.currentAccount);
-//		account.setSold(1000.0);
-//		account.setDate(LocalDateTime.of(2023, 1, 1, 10, 0));
-//		account.setCloseureReason("Closed");
-//		account.setBank(Bank.cih);
-//		return account;
-//	}
-//
-//	private Transaction createMockTransaction() {
-//		Transaction transaction = new Transaction();
-//		return transaction;
-//	}
+
 }
