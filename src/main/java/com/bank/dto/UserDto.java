@@ -10,17 +10,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDto {
+    private Long idU;
     private String name;
-    private String email;
-//    private String username;
-    private String password;
     private String profession;
+    private String email;
+    private String password;
     private String phone;
-
-
-
-    public UserDto(Long idU, String email, String name, String password, String profession, String phone) {
-    }
 
     public UserDto(Long idU, String email, String name, String password, String profession) {
     }
