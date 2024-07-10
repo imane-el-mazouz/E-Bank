@@ -21,6 +21,7 @@ public class User {
     private String profession;
     private String email;
     private String password;
+    private String phone;
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
@@ -30,14 +31,14 @@ public class User {
 //    private List<Card> cards;
 
 
-    public User(Long idU, String name, String profession, String email, String password) {
+    public User(Long idU, String name, String profession, String email, String password , String phone) {
         this.idU = idU;
         this.name = name;
         this.profession = profession;
         this.email = email;
         this.password = password;
+        this.phone = phone;
     }
-
 
 
 

@@ -1,5 +1,6 @@
 package com.bank.controller;
 
+import com.bank.dto.UserDto;
 import com.bank.model.User;
 import com.bank.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class UserController {
 //    }
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllUsers(){
-        List<User> users =userService.getAllUsers();
+    public ResponseEntity<List<UserDto>> getAllUsers(){
+        List<UserDto> users =userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
@@ -37,8 +38,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User saveUser(@RequestBody User user){
-
+    public UserDto saveUser(@RequestBody User user){
         return userService.saveUser(user);
     }
 
@@ -52,7 +52,7 @@ public class UserController {
         }
     }
     @PutMapping("up/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user2) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody User user2) {
         User existingUser = userService.getUserById(id);
         if (existingUser != null) {
             existingUser.setName(user2.getName());
@@ -60,7 +60,7 @@ public class UserController {
             existingUser.setEmail(user2.getEmail());
             existingUser.setPassword(user2.getPassword());
             existingUser.setAccounts(user2.getAccounts());
-            User updatedUser = userService.saveUser(existingUser);
+            UserDto updatedUser = userService.saveUser(existingUser);
             return ResponseEntity.ok(updatedUser);
         } else {
             return ResponseEntity.notFound().build();
