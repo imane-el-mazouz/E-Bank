@@ -68,7 +68,8 @@ public class UserAuthService implements UserDetailsService {
         user.setName(userRequest.getName());
         user.setEmail(userRequest.getEmail());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        // Set other user properties here
+        user.setProfession(userRequest.getProfession());
+        user.setPhone(userRequest.getPhone());
 
         return JwtResponseDTO.builder().accessToken(jwtService.generateToken(userRepository.save(user).getName())).build();
     }
