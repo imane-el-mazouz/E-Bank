@@ -69,26 +69,28 @@ public class AccountService {
 //
 //        return accountRepository.save(savedAccount);
 //    }
-@Transactional
-public Account saveAccount(Account account, Long userId) {
-    User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
-    account.setUser(user);
 
-    Card card = new Card();
-    card.setExpirationDate(LocalDateTime.now().plusYears(2));
-    card.setTypeCard(TypeC.debit);
-    card.setStatus(Status.activated);
-    card.setBlockingReason(Reason.none);
-    card.setAccount(account);
-    cardRepository.save(card);
 
-    account.getCards().add(card);
-    List<Card> cards = new ArrayList<>();
-    cards.add(card);
-    account.setCards(cards);
+    @Transactional
+    public Account saveAccount(Account account, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+        account.setUser(user);
 
-    return accountRepository.save(account);
-}
+        Card card = new Card();
+        card.setExpirationDate(LocalDateTime.now().plusYears(2));
+        card.setTypeCard(TypeC.debit);
+        card.setStatus(Status.activated);
+        card.setBlockingReason(Reason.none);
+        card.setAccount(account);
+        cardRepository.save(card);
+
+        account.getCards().add(card);
+        List<Card> cards = new ArrayList<>();
+        cards.add(card);
+        account.setCards(cards);
+
+        return accountRepository.save(account);
+    }
 
     @Transactional
     public void deleteAccount(Long id) {
@@ -142,3 +144,77 @@ public Account saveAccount(Account account, Long userId) {
         return account.getTransactions();
     }
 }
+
+//@Transactional
+//public Account saveAccount(Account account, Long userId) {
+//    User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+//    account.setUser(user);
+//
+//    Card card = new Card();
+//    card.setExpirationDate(LocalDateTime.now().plusYears(2));
+//    card.setTypeCard(TypeC.debit);
+//    card.setStatus(Status.activated);
+//    card.setBlockingReason(Reason.none);
+//    card.setAccount(account);
+//    cardRepository.save(card);
+//
+//    account.getCards().add(card);
+//    List<Card> cards = new ArrayList<>();
+//    cards.add(card);
+//    account.setCards(cards);
+//
+//    return accountRepository.save(account);
+//}
+//
+//    @Transactional
+//    public void deleteAccount(Long id) {
+//        Account account = accountRepository.findById(id)
+//                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+//        cardRepository.deleteCardByAccountIdA(id);
+//        accountRepository.deleteById(id);
+//    }
+//
+//    @Transactional
+//    public Account updateAccount(Long id, Account updatedAccount) {
+//        Account existingAccount = accountRepository.findById(id)
+//                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+//
+//        existingAccount.setTypeA(updatedAccount.getTypeA());
+//        existingAccount.setSold(updatedAccount.getSold());
+//        existingAccount.setDate(updatedAccount.getDate());
+//        existingAccount.setAccountClosed(updatedAccount.getAccountClosed());
+//        existingAccount.setCloseureReason(updatedAccount.getCloseureReason());
+//        existingAccount.setBank(updatedAccount.getBank());
+//        existingAccount.setUser(updatedAccount.getUser());
+//        existingAccount.setBeneficiaries(updatedAccount.getBeneficiaries());
+//        existingAccount.setCards(updatedAccount.getCards());
+//
+//        return accountRepository.save(existingAccount);
+//    }
+//
+//    @Transactional
+//    public void closeAccount(Long id, String reason) {
+//        Account account = accountRepository.findById(id)
+//                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+//
+//        if (account.getSold() != 0) {
+//            throw new IllegalStateException("Account balance must be zero to close the account");
+//        }
+//
+//        account.setAccountClosed(true);
+//        account.setCloseureReason(reason);
+//        accountRepository.save(account);
+//    }
+//
+//    public Double getAccountBalance(Long id) {
+//        Account account = accountRepository.findById(id)
+//                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+//        return account.getSold();
+//    }
+//
+//    public List<Transaction> getAccountTransactions(Long id) {
+//        Account account = accountRepository.findById(id)
+//                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+//        return account.getTransactions();
+//    }
+//}

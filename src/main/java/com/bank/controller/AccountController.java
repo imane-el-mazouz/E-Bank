@@ -62,47 +62,49 @@ public class AccountController {
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 //        }
 //    }
+@PostMapping("/save/{userId}")
+public ResponseEntity<Account> saveAccountForUser(@PathVariable Long userId, @RequestBody Account account) {
+    try {
+        Account savedAccount = accountService.saveAccount(account, userId);
+        return ResponseEntity.ok(savedAccount);
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+}
 
-    @PostMapping("/save/{userId}")
-    public ResponseEntity<Account> saveAccountForUser(@PathVariable Long userId, @RequestBody Account account) {
-            Account savedAccount = accountService.saveAccount(account, userId);
-            return ResponseEntity.ok(savedAccount);
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        accountService.deleteAccount(id);
+        return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account account) {
+        Account updatedAccount = accountService.updateAccount(id, account);
+        return ResponseEntity.ok(updatedAccount);
+    }
 
+    @PutMapping("/close/{id}")
+    public ResponseEntity<Void> closeAccount(@PathVariable Long id, @RequestBody Map<String, String> request) {
+        String reason = request.get("reason");
+        if (reason == null || reason.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        accountService.closeAccount(id, reason);
+        return ResponseEntity.noContent().build();
+    }
 
+    @GetMapping("/{id}/balance")
+    public ResponseEntity<Double> getAccountBalance(@PathVariable Long id) {
+        Double balance = accountService.getAccountBalance(id);
+        return ResponseEntity.ok(balance);
+    }
+
+    @GetMapping("/{id}/transactions")
+    public ResponseEntity<List<Transaction>> getAccountTransactions(@PathVariable Long id) {
+        List<Transaction> transactions = accountService.getAccountTransactions(id);
+        return ResponseEntity.ok(transactions);
+    }
 }
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
-//        accountService.deleteAccount(id);
-//        return ResponseEntity.noContent().build();
-//    }
-//
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<Void> updateAccount(@PathVariable Long id, @RequestBody Account account) {
-//        accountService.updateAccount(id, account);
-//        return ResponseEntity.noContent().build();
-//    }
-//
-//    @PutMapping("/close/{id}")
-//    public ResponseEntity<Void> closeAccount(@PathVariable Long id, @RequestBody Map<String, String> request) {
-//        String reason = request.get("reason");
-//        if (reason == null || reason.isEmpty()) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//        accountService.closeAccount(id, reason);
-//        return ResponseEntity.noContent().build();
-//    }
-//
-//    @GetMapping("/{id}/sold")
-//    public ResponseEntity<Double> getAccountBalance(@PathVariable Long id) {
-//        Double balance = accountService.getAccountBalance(id);
-//        return ResponseEntity.ok(balance);
-//    }
-//
-//    @GetMapping("/{id}/transactions")
-//    public ResponseEntity<List<Transaction>> getAccountTransactions(@PathVariable Long id) {
-//        List<Transaction> transactions = accountService.getAccountTransactions(id);
-//        return ResponseEntity.ok(transactions);
-//    }
