@@ -50,8 +50,23 @@ public class UserAuthService implements UserDetailsService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequestDTO.getName(), authRequestDTO.getPassword())
         );
+
         if (authentication.isAuthenticated()) {
-            return JwtResponseDTO.builder().accessToken(jwtService.generateToken(authRequestDTO.getName())).build();
+            User user = userRepository.findByName(authRequestDTO.getName());
+            String token = jwtService.generateToken(authRequestDTO.getName());
+
+            UserDto userDto = UserDto.builder()
+                    .idU(user.getIdU())
+                    .name(user.getName())
+                    .email(user.getEmail())
+                    .profession(user.getProfession())
+                    .phone(user.getPhone())
+                    .build();
+
+            return JwtResponseDTO.builder()
+                    .accessToken(token)
+                    .user(userDto)
+                    .build();
         } else {
             throw new UsernameNotFoundException("Invalid user request.");
         }
@@ -71,6 +86,9 @@ public class UserAuthService implements UserDetailsService {
         user.setProfession(userRequest.getProfession());
         user.setPhone(userRequest.getPhone());
 
-        return JwtResponseDTO.builder().accessToken(jwtService.generateToken(userRepository.save(user).getName())).build();
+        return JwtResponseDTO.builder()
+                .accessToken(jwtService.generateToken(userRepository.save(user).getName()))
+                .user(userRequest)
+                .build();
     }
 }
