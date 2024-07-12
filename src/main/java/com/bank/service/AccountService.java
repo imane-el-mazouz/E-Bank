@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -37,11 +38,17 @@ public class AccountService {
         return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException("Account not found"));
     }
 
+//    public List<Account> getAccountsByUserId(Long idU) {
+//        return accountRepository.findByIdU(idU);
+//    }
+
+    public List<Account> getAccountsByUserId(Long idU) {
+        return accountRepository.findByUserId(idU);
+    }
     @Transactional
     public Account saveAccount(Account account) {
         Account savedAccount = accountRepository.save(account);
 
-        // Création d'une nouvelle carte associée au compte
         Card card = new Card();
         card.setExpirationDate(LocalDateTime.now().plusYears(2));
         card.setTypeCard(TypeC.debit);
@@ -49,7 +56,6 @@ public class AccountService {
         card.setBlockingReason(Reason.none);
         card.setAccount(savedAccount);
 
-        // Sauvegarde de la carte et association avec le compte
         cardRepository.save(card);
         List<Card> cards = new ArrayList<>();
         cards.add(card);
@@ -62,18 +68,15 @@ public class AccountService {
     public void deleteAccount(Long id) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found"));
-
-        // Suppression des cartes associées au compte
         cardRepository.deleteCardByAccountIdA(id);
         accountRepository.deleteById(id);
     }
 
     @Transactional
-    public void updateAccount(Long id, Account updatedAccount) {
+    public Account updateAccount(Long id, Account updatedAccount) {
         Account existingAccount = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found"));
 
-        // Mise à jour des informations du compte
         existingAccount.setTypeA(updatedAccount.getTypeA());
         existingAccount.setSold(updatedAccount.getSold());
         existingAccount.setDate(updatedAccount.getDate());
@@ -84,7 +87,7 @@ public class AccountService {
         existingAccount.setBeneficiaries(updatedAccount.getBeneficiaries());
         existingAccount.setCards(updatedAccount.getCards());
 
-        accountRepository.save(existingAccount);
+        return accountRepository.save(existingAccount);
     }
 
     @Transactional
@@ -92,7 +95,6 @@ public class AccountService {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found"));
 
-        // Vérification et fermeture du compte
         if (account.getSold() != 0) {
             throw new IllegalStateException("Account balance must be zero to close the account");
         }
