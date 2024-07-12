@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    @Query("SELECT a FROM Account a WHERE a.user.id = :idU")
+    @Query("SELECT a FROM Account a WHERE a.user.idU = :idU")
     List<Account> findByUserId(@Param("idU") Long idU);
 
     @Query("SELECT a.sold FROM Account a WHERE a.idA = :idA")

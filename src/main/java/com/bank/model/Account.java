@@ -52,7 +52,7 @@ public class Account {
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
 
 
 //    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)

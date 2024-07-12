@@ -7,8 +7,10 @@ import com.bank.exception.AccountNotFoundException;
 import com.bank.model.Account;
 import com.bank.model.Card;
 import com.bank.model.Transaction;
+import com.bank.model.User;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.CardRepository;
+import com.bank.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,11 @@ public class AccountService {
     private CardRepository cardRepository;
 
     @Autowired
-    private CardService cardService;
+    private UserRepository userRepository;
+
+
+    @Autowired
+    private UserService userService;
 
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
@@ -45,24 +51,44 @@ public class AccountService {
     public List<Account> getAccountsByUserId(Long idU) {
         return accountRepository.findByUserId(idU);
     }
-    @Transactional
-    public Account saveAccount(Account account) {
-        Account savedAccount = accountRepository.save(account);
+//    @Transactional
+//    public Account saveAccount(Account account) {
+//        Account savedAccount = accountRepository.save(account);
+//
+//        Card card = new Card();
+//        card.setExpirationDate(LocalDateTime.now().plusYears(2));
+//        card.setTypeCard(TypeC.debit);
+//        card.setStatus(Status.activated);
+//        card.setBlockingReason(Reason.none);
+//        card.setAccount(savedAccount);
+//
+//        cardRepository.save(card);
+//        List<Card> cards = new ArrayList<>();
+//        cards.add(card);
+//        savedAccount.setCards(cards);
+//
+//        return accountRepository.save(savedAccount);
+//    }
+@Transactional
+public Account saveAccount(Account account, Long userId) {
+    User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+    account.setUser(user);
 
-        Card card = new Card();
-        card.setExpirationDate(LocalDateTime.now().plusYears(2));
-        card.setTypeCard(TypeC.debit);
-        card.setStatus(Status.activated);
-        card.setBlockingReason(Reason.none);
-        card.setAccount(savedAccount);
+    Card card = new Card();
+    card.setExpirationDate(LocalDateTime.now().plusYears(2));
+    card.setTypeCard(TypeC.debit);
+    card.setStatus(Status.activated);
+    card.setBlockingReason(Reason.none);
+    card.setAccount(account);
+    cardRepository.save(card);
 
-        cardRepository.save(card);
-        List<Card> cards = new ArrayList<>();
-        cards.add(card);
-        savedAccount.setCards(cards);
+    account.getCards().add(card);
+    List<Card> cards = new ArrayList<>();
+    cards.add(card);
+    account.setCards(cards);
 
-        return accountRepository.save(savedAccount);
-    }
+    return accountRepository.save(account);
+}
 
     @Transactional
     public void deleteAccount(Long id) {
