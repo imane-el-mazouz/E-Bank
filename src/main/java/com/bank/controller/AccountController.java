@@ -65,7 +65,7 @@ public class AccountController {
 @PostMapping("/save/{userId}")
 public ResponseEntity<Account> saveAccountForUser(@PathVariable Long userId, @RequestBody Account account) {
     try {
-        Account savedAccount = accountService.saveAccount(account, userId);
+        Account savedAccount = accountService.saveAccount(userId, account);
         return ResponseEntity.ok(savedAccount);
     } catch (IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

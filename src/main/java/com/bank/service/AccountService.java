@@ -4,6 +4,7 @@ import com.bank.enums.Reason;
 import com.bank.enums.Status;
 import com.bank.enums.TypeC;
 import com.bank.exception.AccountNotFoundException;
+import com.bank.exception.UserNotFoundException;
 import com.bank.model.Account;
 import com.bank.model.Card;
 import com.bank.model.Transaction;
@@ -70,26 +71,51 @@ public class AccountService {
 //        return accountRepository.save(savedAccount);
 //    }
 
+//
+//    @Transactional
+//    public Account saveAccount(Account account, Long userId) {
+//        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+//        account.setUser(user);
+//
+//        Card card = new Card();
+//        card.setExpirationDate(LocalDateTime.now().plusYears(2));
+//        card.setTypeCard(TypeC.debit);
+//        card.setStatus(Status.activated);
+//        card.setBlockingReason(Reason.none);
+//        card.setAccount(account);
+//        cardRepository.save(card);
+//
+//        account.getCards().add(card);
+//        List<Card> cards = new ArrayList<>();
+//        cards.add(card);
+//        account.setCards(cards);
+//
+//        return accountRepository.save(account);
+//    }
 
-    @Transactional
-    public Account saveAccount(Account account, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+
+    public Account saveAccount(Long userId, Account account) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("user not found !");
+        }
+        User user = userOptional.get();
+
         account.setUser(user);
+        account.setRib(account.getRib());
+        Account savedAccount = accountRepository.save(account);
 
         Card card = new Card();
+        card.setAccount(savedAccount);
+        Card savedCard = cardRepository.save(card);
         card.setExpirationDate(LocalDateTime.now().plusYears(2));
         card.setTypeCard(TypeC.debit);
         card.setStatus(Status.activated);
         card.setBlockingReason(Reason.none);
         card.setAccount(account);
-        cardRepository.save(card);
+        savedAccount.getCards().add(savedCard);
 
-        account.getCards().add(card);
-        List<Card> cards = new ArrayList<>();
-        cards.add(card);
-        account.setCards(cards);
-
-        return accountRepository.save(account);
+        return accountRepository.save(savedAccount);
     }
 
     @Transactional

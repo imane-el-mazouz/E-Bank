@@ -4,7 +4,6 @@ import com.bank.dto.UserDto;
 import com.bank.exception.UserNotFoundException;
 import com.bank.model.User;
 import com.bank.repository.UserRepository;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,7 +52,7 @@ public class UserService implements UserDetailsService {
 
 
     public UserDto updateUser(UserDto userDto, Long id) {
-        User userUpdated = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        User userUpdated = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("user not found !"));
         userUpdated.setName(userDto.getName());
         userUpdated.setEmail(userDto.getEmail());
         userUpdated.setPhone(userDto.getEmail());
