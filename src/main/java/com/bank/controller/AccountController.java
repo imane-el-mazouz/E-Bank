@@ -6,6 +6,7 @@ import com.bank.model.User;
 import com.bank.service.AccountService;
 import com.bank.service.TransactionService;
 import com.bank.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +75,11 @@ public ResponseEntity<Account> saveAccountForUser(@PathVariable Long userId, @Re
     }
 }
 
+    @PostMapping("/save/{userId}")
+    public ResponseEntity<Account> saveAccount(@PathVariable Long userId, @Valid @RequestBody Account account) {
+        Account savedAccount = accountService.saveAccount(userId, account);
+        return ResponseEntity.ok(savedAccount);
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.deleteAccount(id);
