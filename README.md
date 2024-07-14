@@ -230,19 +230,4 @@ L'application E-Bank Solution vise à digitaliser les services bancaires pour of
      }
      ```
      
- **URL** : `api/auth/login`
-   - **Méthode** : `POST`
-   - **Body** :
-     ```json
-    {
-  "username": "utilisateur123",
-  "password": "motdepasse123"
-    }
-
-     ```
-   - **Réponse** :
-     ```json
-        {
-  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEyMyIsInJvbGVzIjpbeyJhdXRob3JpdHkiOiJVU0VSIn1dLCJpYXQiOjE2MzUxNjE4MzQsImV4cCI6MTYzNTE2NTQzNH0.xxxxxxxxxxxxxxxxxxxxxxx"
-         }
      ```
