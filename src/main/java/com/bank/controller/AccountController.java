@@ -107,7 +107,7 @@ public ResponseEntity<Account> saveAccountForUser(@PathVariable Long userId, @Re
         Double balance = accountService.getAccountBalance(id);
         return ResponseEntity.ok(balance);
     }
-
+//
     @GetMapping("/{id}/transactions")
     public ResponseEntity<List<Transaction>> getAccountTransactions(@PathVariable Long id) {
         List<Transaction> transactions = accountService.getAccountTransactions(id);
