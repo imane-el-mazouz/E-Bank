@@ -1,30 +1,29 @@
 # E-Bank Solution
 
 ## But du Projet
-L'application E-Bank Solution a pour but de digitaliser les services bancaires pour offrir une expérience fluide et accessible aux utilisateurs. Elle permet aux clients de gérer leurs comptes bancaires, leurs cartes et d'effectuer des opérations financières en ligne de manière sécurisée.
+L'application E-Bank Solution vise à digitaliser les services bancaires pour offrir une expérience fluide et accessible aux utilisateurs. Elle permet aux clients de gérer leurs comptes bancaires, leurs cartes et d'effectuer des opérations financières en ligne de manière sécurisée.
 
-## Fonctionnalités
-1. **Gestion des comptes** :
-   - Création de comptes bancaires
-   - Consultation des soldes et des historiques de transactions
-   - Fermeture de comptes
-
-2. **Gestion des cartes bancaires** :
-   - Consultation des informations de la carte
-   - Activation et désactivation de la carte
-   - Blocage de la carte en cas de perte ou de vol
-
-3. **Transferts d'argent** :
-   - Transferts internes entre comptes du même utilisateur
-   - Transferts externes vers des comptes dans d'autres banques
-   - Gestion des bénéficiaires
+## Fonctionnalités Principales
+- **Gestion des comptes** : Création, consultation des soldes, historiques de transactions, et fermeture de comptes.
+- **Gestion des cartes bancaires** : Consultation des informations, activation, désactivation, et blocage en cas de perte ou vol.
+- **Transferts d'argent** : Transferts internes/externes et gestion des bénéficiaires.
 
 ## Technologies Utilisées
 - **Backend** : Spring Boot
 - **Base de données** : MySQL
-- **Documentation API** : Springfox (Swagger) , Postman
+- **Documentation API** : Springfox (Swagger), Postman
 - **Tests** : JUnit
 - **Build** : Maven
+- **Sécurité** : Authentification et autorisation avec Spring Security, JWT pour la gestion des tokens.
+
+## Sécurité avec Spring Security
+- **Authentification des Utilisateurs** : Utilisation de Spring Security pour l'authentification via nom d'utilisateur et mot de passe hashé.
+- **Génération de JWT** : JWT généré lors de l'authentification réussie, utilisé pour autoriser les accès aux endpoints API sécurisés.
+- **Contrôle d'Accès** : Basé sur les rôles (utilisateur, administrateur) pour limiter l'accès aux fonctionnalités sensibles comme les transferts d'argent.
+
+## Déploiement avec Docker
+- **Dockerisation de l'Application** : Utilisation d'un Dockerfile pour containeriser l'application Spring Boot.
+- **Tests après Déploiement** : Assurez-vous que l'application fonctionne correctement dans un environnement Docker containerisé.
 
 ## Documentation des Requêtes Postman
 
@@ -229,4 +228,21 @@ L'application E-Bank Solution a pour but de digitaliser les services bancaires p
      {
        "message": "Bénéficiaire supprimé avec succès"
      }
+     ```
+     
+ **URL** : `api/auth/login`
+   - **Méthode** : `POST`
+   - **Body** :
+     ```json
+    {
+  "username": "utilisateur123",
+  "password": "motdepasse123"
+    }
+
+     ```
+   - **Réponse** :
+     ```json
+        {
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEyMyIsInJvbGVzIjpbeyJhdXRob3JpdHkiOiJVU0VSIn1dLCJpYXQiOjE2MzUxNjE4MzQsImV4cCI6MTYzNTE2NTQzNH0.xxxxxxxxxxxxxxxxxxxxxxx"
+         }
      ```
