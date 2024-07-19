@@ -26,7 +26,6 @@ public class Transaction {
     private LocalDateTime date;
 
     private Double amount;
-    private Long ribT;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "typeT", nullable = false, length = 225)

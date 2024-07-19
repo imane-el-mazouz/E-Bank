@@ -45,6 +45,7 @@ public class AccountService {
     }
 
     public List<Account> getAccountsByUserId(Long idU) {
+
         return accountRepository.findByUserId(idU);
     }
 

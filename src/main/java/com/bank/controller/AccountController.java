@@ -52,34 +52,34 @@ public class AccountController {
 //    }
 
 
-//    @PostMapping("/save/{userId}")
-//    public ResponseEntity<Account> saveAccountForUser(@PathVariable Long userId, @RequestBody Account account) {
-//        try {
-//            Account savedAccount = accountService.saveAccount(account, userId);
-//            return ResponseEntity.ok(savedAccount);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.notFound().build();
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
-@PostMapping("/save/{userId}")
-public ResponseEntity<Account> saveAccountForUser(@PathVariable Long userId, @RequestBody Account account) {
-    try {
-        Account savedAccount = accountService.saveAccount(userId, account);
-        return ResponseEntity.ok(savedAccount);
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-    }
-}
-
     @PostMapping("/save/{userId}")
-    public ResponseEntity<Account> saveAccount(@PathVariable Long userId, @Valid @RequestBody Account account) {
-        Account savedAccount = accountService.saveAccount(userId, account);
-        return ResponseEntity.ok(savedAccount);
+    public ResponseEntity<Account> saveAccountForUser(@PathVariable Long userId, @RequestBody Account account) {
+        try {
+            Account savedAccount = accountService.saveAccount(userId, account);
+            return ResponseEntity.ok(savedAccount);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+//@PostMapping("/save/{userId}")
+//public ResponseEntity<Account> saveAccountForUser(@PathVariable Long userId, @RequestBody Account account) {
+//    try {
+//        Account savedAccount = accountService.saveAccount(userId, account);
+//        return ResponseEntity.ok(savedAccount);
+//    } catch (IllegalArgumentException e) {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//    } catch (Exception e) {
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//    }
+//}
+
+//    @PostMapping("/save/{userId}")
+//    public ResponseEntity<Account> saveAccount(@PathVariable Long userId, @Valid @RequestBody Account account) {
+//        Account savedAccount = accountService.saveAccount(userId, account);
+//        return ResponseEntity.ok(savedAccount);
+//    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.deleteAccount(id);
